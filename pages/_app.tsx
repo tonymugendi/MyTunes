@@ -2,6 +2,8 @@ import React from 'react'
 import { ChakraProvider, extendTheme } from "@chakra-ui/react"
 import "reset-css"
 
+import Layout from '../components/layout';
+
 const theme = extendTheme({
   colors: {
     gray: {
@@ -34,7 +36,9 @@ const theme = extendTheme({
 function MyApp({ Component, pageProps }) {
   return (
     <ChakraProvider theme={theme}>
-      <Component {...pageProps} />
+      <Layout>
+        <Component {...pageProps} />
+      </Layout>
     </ChakraProvider>
   )
 }
