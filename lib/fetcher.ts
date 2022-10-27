@@ -3,9 +3,14 @@ const fetcher = (url: string, data = undefined) => {
     method: data ? "POST" : "GET",
     credentials: "include",
     headers: {
-      'Content-Type': "application/json"
+      "Content-Type": "application/json",
     },
-    body: JSON.stringify(data)
+    body: JSON.stringify(data),
+  }).then((res) => {
+    if (res.status > 299 && res.status < 200) {
+      throw new Error()
+    }
+    return res.json();
   });
 };
 

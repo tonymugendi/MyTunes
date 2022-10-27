@@ -15,21 +15,27 @@ const validateRoute = (handler) => {
           where: { id },
         });
 
-        if(!user) {
-          throw new Error("Not real user")
+        if (!user) {
+          throw new Error("Not real user");
         }
       } catch (error) {
-        res.status(401)
-        res.json({error: "Not Authorized"})
-        return
+        res.status(401);
+        res.json({ error: "Not Authorized" });
+        return;
       }
 
-      return handler(req, res, user)
+      return handler(req, res, user);
     }
 
     res.status(401);
-    res.json({error: "Not Authorized"})
+    res.json({ error: "Not Authorized" });
   };
+};
+
+export const validateToken = (token) => {
+  const user = jwt.verify(token, "hello");
+
+  return user;
 };
 
 export default validateRoute;
