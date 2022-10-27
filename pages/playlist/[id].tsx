@@ -1,5 +1,6 @@
 import React from 'react'
 import GradientLayout from '../../components/gradientLayout'
+import SongTable from '../../components/songsTable'
 import { validateToken } from '../../lib/auth'
 import prisma from '../../lib/prisma'
 
@@ -30,6 +31,7 @@ const Playlist = ({ playlist }) => {
       description={`${playlist.songs.length} songs`}
       image={`https://picsum.photos/400?random=${playlist.id}`}
     >
+      <SongTable songs={playlist.songs}/>
 
     </GradientLayout>
   )
@@ -37,11 +39,21 @@ const Playlist = ({ playlist }) => {
 
 
 export const getServerSideProps = async ({ query, req }) => {
-  const { id } = validateToken(req.cookies.MYTUNES_ACCESS_TOKEN);
+  let user;
+  try {
+    user = validateToken(req.cookies.MYTUNES_ACCESS_TOKEN);
+  } catch (error) {
+    return {
+      redirect: {
+        permanent: false,
+        destination: "/signin"
+      }
+    }
+  }
   const [playlist] = await prisma.pLaylist.findMany({
     where: {
       id: +query.id,
-      userId: id
+      userId: user.id
     },
     include: {
       songs: {
